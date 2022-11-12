@@ -4,6 +4,8 @@ const app = electron.app;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
+const find = require('find-process');
+
 const path = require('path');
 const url = require('url');
 
@@ -14,6 +16,7 @@ let mainWindow;
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
+    autoHideMenuBar: true,
     width: 800,
     height: 600,
 
@@ -34,6 +37,7 @@ function createWindow() {
       slashes: true,
     })
   : "http://localhost:3000";
+
   mainWindow.loadURL(appURL);
 
   // Automatically open Chrome's DevTools in development mode.
@@ -61,6 +65,27 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (mainWindow === null) createWindow()
   });
+
+  // In development, automatically reload the browser window when the
+  // React app is rebuilt.
+  if (!app.isPackaged) {
+    const watcher = require("chokidar").watch(path.join(__dirname, "../build"));
+    watcher.on("ready", () => {
+      watcher.on("all", () => {
+        mainWindow.reload();
+      });
+    });
+  }
+
+  // In production, check for an existing instance of the app and
+  // close this one if found.
+  if (app.isPackaged) {
+    find('name', 'electron').then(function (list) {
+      if (list.length > 1) {
+        app.quit();
+      }
+    });
+  }
 });
 
 // Quit when all windows are closed.
