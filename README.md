@@ -1,6 +1,6 @@
 # Getting Started
 
-This project is a starting point for a Electron application.
+This project is a starting point for a Electron React application.
 
 ## Quick start
 
