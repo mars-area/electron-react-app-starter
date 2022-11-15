@@ -1,8 +1,4 @@
-const electron = require('electron');
-// Module to control application life.
-const app = electron.app;
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow;
+const { app, BrowserWindow } = require('electron');
 
 const find = require('find-process');
 
@@ -12,6 +8,40 @@ const url = require('url');
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let splashWindow;
+
+function createSplashWindow() {
+  splashWindow = new BrowserWindow({
+    width: 400,
+    height: 400,
+    frame: false,
+    transparent: true,
+    alwaysOnTop: true,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+
+  splashWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, 'splash.html'),
+      protocol: 'file:',
+      slashes: true,
+    })
+  );
+
+  splashWindow.on('closed', () => {
+    splashWindow = null;
+  });
+
+  splashWindow.webContents.on('did-finish-load', () => {
+    splashWindow.show();
+  });
+
+  splashWindow.webContents.on('did-fail-load', () => {
+    splashWindow.hide();
+  });
+}
 
 function createWindow() {
   // Create the browser window.
@@ -19,7 +49,7 @@ function createWindow() {
     autoHideMenuBar: true,
     width: 800,
     height: 600,
-
+    show: false,
     // Set the path of an additional "preload" script that can be used to
     // communicate between node-land and browser-land.
     webPreferences: {
@@ -39,6 +69,7 @@ function createWindow() {
   : "http://localhost:3000";
 
   mainWindow.loadURL(appURL);
+  mainWindow.center();
 
   // Automatically open Chrome's DevTools in development mode.
   if (!app.isPackaged) {
@@ -52,12 +83,20 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null
   });
+
+  mainWindow.once('ready-to-show', () => {
+    setTimeout(() => {
+      mainWindow.show();
+      splashWindow.destroy();
+    }, 3000);
+  });
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  createSplashWindow();
   createWindow()
 
   app.on('activate', function () {
