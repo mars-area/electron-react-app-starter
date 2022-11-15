@@ -1,10 +1,10 @@
 {
-  "name": "bot",
+  "name": "Electron React Starter",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "author": "M. Ilham Margatama",
-  "description": "Bot",
-  "homepage": "./",
+  "description": "Electron React starter",
+  "homepage": "https://github.com/mars-area/electron-app-starter.git",
   "main": "./public/electron.js",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
