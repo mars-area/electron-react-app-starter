@@ -8,7 +8,7 @@ This project is a starting point for a Electron React application.
 # Clone this repository
 git clone
 # Go into the repository
-cd electron-app-starter
+cd electron-react-app-starter
 # Install dependencies
 npm install
 # Run the app
