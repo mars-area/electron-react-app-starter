@@ -66,7 +66,7 @@ function createWindow() {
       protocol: "file:",
       slashes: true,
     })
-  : "http://localhost:3000";
+  : "http://localhost:5173";
 
   mainWindow.loadURL(appURL);
   mainWindow.center();
@@ -137,7 +137,7 @@ app.on('window-all-closed', function () {
 // If your app has no need to navigate or only needs to navigate to known pages,
 // it is a good idea to limit navigation outright to that known scope,
 // disallowing any other kinds of navigation.
-const allowedNavigationDestinations = "http://localhost:3000";
+const allowedNavigationDestinations = "http://localhost:5173";
 app.on("web-contents-created", (event, contents) => {
   contents.on("will-navigate", (event, navigationUrl) => {
     const parsedUrl = new URL(navigationUrl);
